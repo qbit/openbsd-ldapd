@@ -9,8 +9,7 @@ galaxy_info:
   platforms:
   - name: OpenBSD
     versions:
-    - current
-    - 6.3
+    - 6.1
 
   galaxy_tags: ["OpenBSD", "ldapd"]
 
