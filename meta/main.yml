@@ -7,9 +7,6 @@ galaxy_info:
   min_ansible_version: 1.2
 
   platforms:
-  - name: OpenBSD
-    versions:
-    - 6.3
   - name: Debian
     versions:
     - all
