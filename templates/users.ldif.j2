@@ -1,0 +1,53 @@
+dn: dc={{ ldap_domain }},dc={{ ldap_tld }}
+dc: {{ ldap_domain }}
+objectClass: top
+objectClass: domain
+
+dn: ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
+ou: Groups
+objectClass: top
+objectClass: organizationalUnit
+
+dn: cn=users,ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
+objectClass: posixGroup
+objectClass: top
+cn: users
+userPassword: {crypt}*
+gidNumber: 10
+memberUid: alice
+
+{% for item in ldap_users %}
+dn: cn={{ item.uid }},ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
+objectClass: posixGroup
+objectClass: top
+cn: {{ item.uid }}
+userPassword: {crypt}*
+gidNumber: {{ ldap_gid_start + loop.index }}
+
+dn: uid={{ item.uid }},ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}
+uid: {{ item.uid }}
+cn: {{ item.first }} {{ item.last }}
+objectClass: account
+objectClass: posixAccount
+objectClass: bsdAccount
+objectClass: top
+objectClass: shadowAccount
+userPassword: {BSDAUTH}{{ item.uid }}
+shadowPassword: {{ item.pw_hash }}
+uidNumber: {{ ldap_uid_start + loop.index }}
+gidNumber: {{ ldap_gid_start + loop.index }}
+userClass: default
+shadowExpire: 0
+gecos: {{ item.first }} {{ item.last }}
+homeDirectory: /home/{{ item.uid }}
+loginShell: {{ item.shell | default('/bin/ksh') }}
+{% if item.pubkey is defined %}
+sshPublicKey: {{ item.pubkey }}
+{% endif %}
+
+{% endfor %}

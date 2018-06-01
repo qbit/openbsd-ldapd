@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ldapadd -x -D 'cn={{ ldap_admin }},dc={{ ldap_domain }},dc={{ ldap_tld }}' -W -f /root/users.ldif

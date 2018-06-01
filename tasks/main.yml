@@ -1,0 +1,72 @@
+---
+
+- name: Install deps
+  package:
+    name: "{{ item }}"
+  with_items:
+    - openldap-client--
+    - py-openssl
+
+- name: Check for certs
+  stat:
+    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
+  register: csr
+
+- name: Create private key
+  openssl_privatekey:
+    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
+
+- name: Create csr
+  openssl_csr:
+    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
+    privatekey_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
+    common_name: "{{ ldap_domain }}.{{ ldap_tld }}"
+    force: False
+  when: csr.stat.exists == False
+
+- name: Create certificate
+  openssl_certificate:
+    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.crt"
+    privatekey_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
+    csr_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
+    provider: selfsigned
+
+- name: Create example LDIF
+  template:
+    src: users.ldif.j2
+    dest: /root/users.ldif
+    owner: root
+    mode: 0600
+
+- name: Copy bsd.schema
+  copy:
+    src: bsd.schema
+    dest: /etc/ldap/bsd.schema
+    mode: 0644
+    owner: root
+    group: wheel
+
+- name: Setup ldapd
+  template:
+    src: ldapd.conf.j2
+    dest: /etc/ldapd.conf
+    mode: 0600
+    owner: root
+    group: wheel
+    validate: /usr/sbin/ldapd -n -f %s
+    #notify: restart ldapd
+
+- name: Start and enable services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - ldapd
+
+- name: Create ldap_init.sh
+  template:
+    src: ldap_init.sh.j2
+    dest: /root/ldap_init.sh
+    owner: root
+    mode: 0700

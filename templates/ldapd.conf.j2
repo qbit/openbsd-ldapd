@@ -1,0 +1,24 @@
+#	$OpenBSD: ldapd.conf,v 1.1 2014/07/11 21:20:10 deraadt Exp $
+#
+#	{{ ansible_managed }}
+#
+
+schema "/etc/ldap/core.schema"
+schema "/etc/ldap/inetorgperson.schema"
+schema "/etc/ldap/nis.schema"
+schema "/etc/ldap/bsd.schema"
+
+listen on lo0 secure
+listen on {{ ansible_default_ipv4.interface }} ldaps
+listen on "/var/run/ldapi"
+
+namespace "dc={{ ldap_domain }},dc={{ ldap_tld }}" {
+	rootdn		"cn={{ ldap_admin }},dc={{ ldap_domain }},dc={{ ldap_tld }}"
+	rootpw		"{CRYPT}{{ lookup('pipe', 'encrypt -b a ' + ldap_admin_pass|quote ) }}"
+{% for i in ldap_indexes %}
+	index		{{ i }}
+{% endfor %}
+	#deny access to any by any
+	#allow bind access to children of "ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}" by any
+	#allow write access to any by self
+}

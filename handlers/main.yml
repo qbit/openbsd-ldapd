@@ -1,0 +1,7 @@
+---
+
+- name: restart ldapd
+  service: name=ldapd state=restarted
+
+- name: restart ypldap
+  service: name=ypldap state=restarted

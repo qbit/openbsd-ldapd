@@ -1,0 +1,19 @@
+---
+
+ldap_domain: bolddaemon
+ldap_tld: com
+ldap_fqdn: "{{ ldap_domain }}.{{ ldap_tld }}"
+ldap_admin: admin
+# Generate with "encrypt -b a password", where password is the plain text
+# version to use. You must prepend {CRYPT}. The password from below is
+# "secret".
+#ldap_admin_pass: "{CRYPT}$2b$08$uqLDO.G1vuJYyu3j.0CGz.J3EHAVvAQ3bsBEfG9/P44viHq4RCq8O"
+ldap_admin_pass: "welcome"
+ldap_uid_start: 1000
+ldap_gid_start: 1000
+ldap_indexes: [ objectClass, cn, ou, uid, uidNumber, gidNumber, sn, givenName, mail]
+
+ldap_users: [
+        { uid: puffy, first: "Puffy", last: "Fish", pw_hash: "$2b$10$leismHABjnpr/lGk4bQ6ce374PYKP/8LyNDh7ZYJAgAG0CNFVdcj2" },
+        { uid: qbit, first: "Aaron", last: "Bieber", pw_hash: "$2b$10$leismHABjnpr/lGk4bQ6ce374PYKP/8LyNDh7ZYJAgAG0CNFVdcj2" },
+]
