@@ -2,6 +2,8 @@ galaxy_info:
   author: Aaron Bieber <aaron@bolddaemon.com>
   description: Unvetted Rando
 
+  license: BSD
+
   min_ansible_version: 1.2
 
   platforms:
