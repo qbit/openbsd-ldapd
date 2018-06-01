@@ -1,6 +1,6 @@
 galaxy_info:
   author: Aaron Bieber <aaron@bolddaemon.com>
-  description: Unvetted Rando
+  description: OpenBSD ldapd built for authentication
 
   license: BSD
 
