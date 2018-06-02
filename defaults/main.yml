@@ -18,5 +18,5 @@ ldap_groups: [
 ]
 
 ldap_users: [
-        { uid: puffy, first: "Puffy", last: "Fish", pw_hash: "$2b$10$leismHABjnpr/lGk4bQ6ce374PYKP/8LyNDh7ZYJAgAG0CNFVdcj2" }
+        { uid: puffy, first: "Puffy", last: "Fish", pw_hash: "$2b$10$leismHABjnpr/lGk4bQ6ce374PYKP/8LyNDh7ZYJAgAG0CNFVdcj2", pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDUJHLRqynSi5YpWU0v6xogi0hiRFdXAckAw+KOek6TA" },
 ]
