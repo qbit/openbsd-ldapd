@@ -13,6 +13,10 @@ ldap_uid_start: 1000
 ldap_gid_start: 1000
 ldap_indexes: [ objectClass, cn, ou, uid, uidNumber, gidNumber, sn, givenName, mail]
 
+ldap_groups: [
+        { gidnum: 666, name: _ldap, member_uids: [ puffy ] }
+]
+
 ldap_users: [
         { uid: puffy, first: "Puffy", last: "Fish", pw_hash: "$2b$10$leismHABjnpr/lGk4bQ6ce374PYKP/8LyNDh7ZYJAgAG0CNFVdcj2" }
 ]

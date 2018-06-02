@@ -13,6 +13,19 @@ ou: Groups
 objectClass: top
 objectClass: organizationalUnit
 
+{% for item in ldap_groups %}
+dn: cn={{ item.name }},ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
+objectClass: posixGroup
+objectClass: top
+cn: {{ item.name }}
+userPassword: {crypt}*
+gidNumber: {{ item.gidnum }}
+{% for uid in item.member_uids %}
+memberUid: {{ uid }}
+{% endfor %}
+
+{% endfor %}
+
 {% for item in ldap_users %}
 dn: cn={{ item.uid }},ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
 objectClass: posixGroup
