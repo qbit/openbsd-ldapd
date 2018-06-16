@@ -3,6 +3,13 @@ dc: {{ ldap_domain }}
 objectClass: top
 objectClass: domain
 
+dn: cn={{ ldap_read }},dc={{ ldap_domain }},dc={{ ldap_tld }}
+cn: {{ ldap_read }}
+objectClass: top
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+userPassword: {{ ldap_read_pw }}
+
 dn: ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}
 ou: People
 objectClass: top
