@@ -59,7 +59,7 @@
     owner: root
     group: wheel
     validate: /usr/sbin/ldapd -n -f %s
-    #notify: restart ldapd
+  notify: restart ldapd
 
 - name: Start and enable services
   service:
