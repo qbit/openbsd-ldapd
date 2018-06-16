@@ -43,10 +43,11 @@ gidNumber: {{ ldap_gid_start + loop.index }}
 dn: uid={{ item.uid }},ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}
 uid: {{ item.uid }}
 cn: {{ item.first }} {{ item.last }}
-objectClass: account
+sn: {{ item.first }} {{ item.last }}
+objectClass: top
 objectClass: posixAccount
 objectClass: bsdAccount
-objectClass: top
+objectClass: inetOrgPerson
 objectClass: shadowAccount
 userPassword: {BSDAUTH}{{ item.uid }}
 shadowPassword: {{ item.pw_hash }}
@@ -55,10 +56,17 @@ gidNumber: {{ ldap_gid_start + loop.index }}
 userClass: default
 shadowExpire: 0
 gecos: {{ item.first }} {{ item.last }}
-homeDirectory: /home/{{ item.uid }}
+homeDirectory: {{ item.home | default('/home/' + item.uid) }}
+{% if item.mail is defined %}
+mail: {{ item.mail }}
+{% endif %}
+{% if item.mobile is defined %}
+mobile: {{ item.mobile }}
+{% endif %}
 loginShell: {{ item.shell | default('/bin/ksh') }}
 {% if item.pubkey is defined %}
 sshPublicKey: {{ item.pubkey }}
 {% endif %}
 
 {% endfor %}
+
