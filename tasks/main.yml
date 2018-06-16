@@ -9,20 +9,24 @@
 
 - name: Check for certs
   stat:
-    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
-  register: csr
+    path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.crt"
+  register: crt
 
 - name: Create private key
   openssl_privatekey:
     path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
+  when: crt.stat.exists == False
 
 - name: Create csr
   openssl_csr:
     path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
     privatekey_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
-    common_name: "{{ ldap_domain }}.{{ ldap_tld }}"
+    common_name: "{{ ansible_fqdn }}"
+    subject_alt_name: "DNS:{{ ansible_nodename }},DNS:{{ ansible_fqdn }},DNS:{{ ldap_domain }}.{{ ldap_tld }},DNS:{{ inventory_hostname }}"
+    country_name: "US"
+    state_or_province_name: "CO"
     force: False
-  when: csr.stat.exists == False
+  when: crt.stat.exists == False
 
 - name: Create certificate
   openssl_certificate:
@@ -30,6 +34,7 @@
     privatekey_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.key"
     csr_path: "/etc/ldap/certs/{{ ansible_default_ipv4.interface }}.csr"
     provider: selfsigned
+  when: crt.stat.exists == False
 
 - name: Create example LDIF
   template:
