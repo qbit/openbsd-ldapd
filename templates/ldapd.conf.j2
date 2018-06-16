@@ -19,6 +19,6 @@ namespace "dc={{ ldap_domain }},dc={{ ldap_tld }}" {
 	index		{{ i }}
 {% endfor %}
 	#deny access to any by any
-	#allow bind access to children of "ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}" by any
+	#allow read access to children of "ou=People,dc={{ ldap_domain }},dc={{ ldap_tld }}" by "cn={{ ldap_read }},dc={{ ldap_domain }},dc={{ ldap_tld }}"
 	#allow write access to any by self
 }

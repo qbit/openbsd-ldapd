@@ -32,7 +32,6 @@ memberUid: {{ uid }}
 {% endfor %}
 
 {% endfor %}
-
 {% for item in ldap_users %}
 dn: cn={{ item.uid }},ou=Groups,dc={{ ldap_domain }},dc={{ ldap_tld }}
 objectClass: posixGroup
